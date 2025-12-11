@@ -1,0 +1,16 @@
+{
+  "name": "freelance-platform/itcs-freelance",
+  "description": "A freelancing platform for IT and Computer Science professionals",
+  "type": "project",
+  "require": {
+    "php": ">=7.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "config": {
+    "optimize-autoloader": true
+  }
+}

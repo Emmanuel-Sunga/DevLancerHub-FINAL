@@ -1,0 +1,126 @@
+[
+    {
+        "sender_id": 1,
+        "receiver_id": 2,
+        "message": "hi",
+        "is_read": true,
+        "created_at": "2025-11-12 08:00:40",
+        "id": 1,
+        "read_at": "2025-11-12 08:01:11"
+    },
+    {
+        "sender_id": 2,
+        "receiver_id": 1,
+        "message": "hello",
+        "is_read": true,
+        "created_at": "2025-11-12 08:01:17",
+        "id": 2,
+        "read_at": "2025-11-12 08:18:36"
+    },
+    {
+        "sender_id": 1,
+        "receiver_id": 2,
+        "message": "hello",
+        "is_read": true,
+        "created_at": "2025-11-18 01:53:12",
+        "id": 3,
+        "read_at": "2025-11-25 03:08:37"
+    },
+    {
+        "sender_id": 3,
+        "receiver_id": 2,
+        "message": "czxcxz",
+        "is_read": true,
+        "created_at": "2025-11-25 03:30:06",
+        "id": 4,
+        "read_at": "2025-11-25 03:32:57"
+    },
+    {
+        "sender_id": 3,
+        "receiver_id": 2,
+        "message": "zxczz",
+        "is_read": true,
+        "created_at": "2025-11-25 03:30:32",
+        "id": 5,
+        "read_at": "2025-11-25 03:32:57"
+    },
+    {
+        "sender_id": 3,
+        "receiver_id": 2,
+        "message": "ghfghfhf",
+        "is_read": true,
+        "created_at": "2025-11-25 03:32:29",
+        "id": 6,
+        "read_at": "2025-11-25 03:32:57"
+    },
+    {
+        "sender_id": 2,
+        "receiver_id": 3,
+        "message": "hfghgf",
+        "is_read": true,
+        "created_at": "2025-11-25 03:33:09",
+        "id": 7,
+        "read_at": "2025-11-25 03:33:38"
+    },
+    {
+        "sender_id": 2,
+        "receiver_id": 3,
+        "message": "sdasda",
+        "is_read": false,
+        "created_at": "2025-12-02 05:50:05",
+        "id": 8
+    },
+    {
+        "sender_id": 1,
+        "receiver_id": 4,
+        "message": "may juwa ka na ba",
+        "is_read": false,
+        "created_at": "2025-12-02 06:25:32",
+        "id": 9
+    },
+    {
+        "sender_id": 1,
+        "receiver_id": 5,
+        "message": "SBAPN",
+        "is_read": true,
+        "created_at": "2025-12-08 16:26:27",
+        "id": 10,
+        "read_at": "2025-12-08 16:31:34"
+    },
+    {
+        "sender_id": 1,
+        "receiver_id": 5,
+        "message": "AYO?",
+        "is_read": true,
+        "created_at": "2025-12-08 16:30:57",
+        "id": 11,
+        "read_at": "2025-12-08 16:31:34"
+    },
+    {
+        "sender_id": 1,
+        "receiver_id": 5,
+        "message": "Hello",
+        "is_read": true,
+        "created_at": "2025-12-08 16:31:19",
+        "id": 12,
+        "read_at": "2025-12-08 16:31:34"
+    },
+    {
+        "sender_id": 5,
+        "receiver_id": 1,
+        "message": "Hi",
+        "is_read": true,
+        "created_at": "2025-12-08 16:31:37",
+        "id": 13,
+        "read_at": "2025-12-10 03:59:14"
+    },
+    {
+        "sender_id": 5,
+        "receiver_id": 1,
+        "message": "SBAPN",
+        "is_read": true,
+        "created_at": "2025-12-08 16:31:42",
+        "id": 14,
+        "read_at": "2025-12-10 03:59:14"
+    }
+]

@@ -1,0 +1,108 @@
+[
+    {
+        "job_id": 1,
+        "employer_id": 2,
+        "employee_id": 2,
+        "amount": 10000,
+        "status": "completed",
+        "payment_method": "bank_transfer",
+        "description": "",
+        "created_at": "2025-11-25 03:09:10",
+        "id": 1,
+        "completed_at": "2025-11-25 03:09:23"
+    },
+    {
+        "job_id": 2,
+        "employer_id": 2,
+        "employee_id": 1,
+        "amount": 5000,
+        "status": "completed",
+        "payment_method": "bank_transfer",
+        "description": "Thank you",
+        "created_at": "2025-11-25 03:22:10",
+        "id": 2,
+        "completed_at": "2025-11-25 03:22:18"
+    },
+    {
+        "job_id": 2,
+        "employer_id": 2,
+        "employee_id": 3,
+        "amount": 5000,
+        "status": "completed",
+        "payment_method": "bank_transfer",
+        "description": "TY",
+        "created_at": "2025-11-25 03:31:52",
+        "id": 3,
+        "completed_at": "2025-11-25 03:32:03"
+    },
+    {
+        "job_id": 1,
+        "employer_id": 2,
+        "employee_id": 3,
+        "amount": 100000,
+        "status": "completed",
+        "payment_method": "bank_transfer",
+        "description": "TY",
+        "created_at": "2025-11-25 03:38:57",
+        "id": 4,
+        "completed_at": "2025-11-25 03:39:04"
+    },
+    {
+        "job_id": 1,
+        "employer_id": 2,
+        "employee_id": 1,
+        "amount": 10000,
+        "status": "completed",
+        "payment_method": "bank_transfer",
+        "description": "TY :)",
+        "created_at": "2025-11-25 16:55:08",
+        "id": 5,
+        "completed_at": "2025-11-25 16:55:12"
+    },
+    {
+        "job_id": 2,
+        "employer_id": 2,
+        "employee_id": 3,
+        "amount": 1000000,
+        "status": "completed",
+        "payment_method": "credit_card",
+        "description": "sadasd",
+        "created_at": "2025-12-02 05:50:35",
+        "id": 6,
+        "completed_at": "2025-12-02 05:50:39"
+    },
+    {
+        "job_id": 6,
+        "employer_id": 5,
+        "employee_id": 1,
+        "amount": 100,
+        "status": "completed",
+        "payment_method": "bank_transfer",
+        "description": "TY",
+        "created_at": "2025-12-08 16:28:05",
+        "id": 7,
+        "completed_at": "2025-12-08 16:28:07"
+    },
+    {
+        "job_id": 3,
+        "employer_id": 2,
+        "employee_id": 1,
+        "amount": 10000,
+        "status": "cancelled",
+        "payment_method": "bank_transfer",
+        "description": "",
+        "created_at": "2025-12-10 16:07:08",
+        "id": 8
+    },
+    {
+        "job_id": 1,
+        "employer_id": 2,
+        "employee_id": 1,
+        "amount": 10000,
+        "status": "pending",
+        "payment_method": "bank_transfer",
+        "description": "Thank You",
+        "created_at": "2025-12-11 05:00:39",
+        "id": 9
+    }
+]

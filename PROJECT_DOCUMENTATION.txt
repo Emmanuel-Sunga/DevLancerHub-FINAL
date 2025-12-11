@@ -1,0 +1,635 @@
+================================================================================
+                        DEVLANCERHUB PROJECT DOCUMENTATION
+================================================================================
+
+1. INTRODUCTION
+================================================================================
+
+1.1 Project Overview
+--------------------------------------------------------------------------------
+DevLancerHub is a comprehensive freelancing platform specifically designed for 
+IT and Computer Science professionals. The platform connects talented freelancers 
+(employees) with employers (clients) seeking technical expertise. Built using 
+PHP with an MVC (Model-View-Controller) architecture, the application provides 
+a complete ecosystem for job posting, application management, payments, messaging, 
+and professional networking.
+
+The platform uses a JSON-based file system for data storage, making it lightweight 
+and easy to deploy without requiring a traditional database setup. The application 
+follows object-oriented programming principles with a clear separation of concerns 
+across Models, Views, Controllers, Services, and Middleware.
+
+1.2 Purpose
+--------------------------------------------------------------------------------
+The primary purpose of DevLancerHub is to create a streamlined platform where:
+
+- Freelancers can:
+  * Browse and search available job postings
+  * Apply to jobs with cover letters
+  * Track application statuses (Pending/Accepted/Rejected)
+  * Manage their professional profiles
+  * View payment history and earnings
+  * Communicate with employers through messaging
+  * Build professional networks by connecting with other users
+
+- Employers can:
+  * Post detailed job listings with requirements, budget, and deadlines
+  * Manage and edit their job postings
+  * Review and organize applications from freelancers
+  * Accept or reject applications with one-click actions
+  * Process payments for completed work
+  * Browse and discover talented freelancers
+  * Communicate with applicants and freelancers
+  * Build their professional network
+
+The platform aims to simplify the freelancing process by providing all necessary 
+tools in one integrated system, reducing the need for multiple external platforms 
+and improving the efficiency of the hiring process.
+
+1.3 Target Users
+--------------------------------------------------------------------------------
+The platform serves two primary user types:
+
+1. EMPLOYEES (Freelancers):
+   - IT professionals and computer science experts seeking freelance opportunities
+   - Developers, designers, system administrators, and other tech specialists
+   - Individuals looking to showcase their skills and experience
+   - Professionals seeking flexible work arrangements
+
+2. EMPLOYERS (Clients):
+   - Companies and individuals needing IT and computer science expertise
+   - Organizations looking to hire freelancers for specific projects
+   - Businesses requiring technical talent for short-term or long-term projects
+   - Anyone seeking to post technical job opportunities
+
+
+================================================================================
+4. IMPLEMENTATION DETAILS
+================================================================================
+
+4.1 Key Classes Explained
+================================================================================
+
+--------------------------------------------------------------------------------
+MODEL CLASSES
+--------------------------------------------------------------------------------
+
+Class: User
+Location: src/Models/User.php
+Purpose: Represents user accounts in the system
+
+Important Properties:
+- id (int|null): Unique user identifier
+- email (string): User's email address (used for authentication)
+- password (string): Hashed password for authentication
+- firstName (string): User's first name
+- lastName (string): User's last name
+- role (string): User role - either 'employee' or 'employer'
+- skills (string): Professional skills (primarily for employees)
+- bio (string): User biography/profile description
+- phone (string): Contact phone number
+- location (string): User's location
+- experienceYears (int): Years of professional experience
+- createdAt (string): Account creation timestamp
+
+Important Methods:
+- getId(): Returns user ID
+- getFullName(): Returns concatenated first and last name
+- getRole(): Returns user role ('employee' or 'employer')
+- toArray(): Converts user object to associative array
+- toSafeArray(): Returns user data without password field (for display)
+
+Relationships:
+- Linked to Job model via employerId (User as employer creates Jobs)
+- Linked to Application model via employeeId (User as employee creates Applications)
+- Linked to Payment model via employerId and employeeId
+- Linked to Message model via senderId and receiverId
+- Linked to Friend model via userId and friendId
+
+
+Class: Job
+Location: src/Models/Job.php
+Purpose: Represents job postings created by employers
+
+Important Properties:
+- id (int|null): Unique job identifier
+- employerId (int): ID of the user who posted the job
+- title (string): Job title
+- description (string): Detailed job description
+- skillsRequired (string): Required skills for the job
+- budget (string): Budget range for the job
+- duration (string): Expected duration of the job
+- location (string): Job location
+- jobType (string): Type of job (Full-time, Part-time, Contract, Freelance)
+- status (string): Job status (typically 'Open' or 'Closed')
+- createdAt (string): Job posting creation timestamp
+- deadline (string|null): Optional application deadline
+
+Important Methods:
+- getId(): Returns job ID
+- getEmployerId(): Returns ID of the employer who posted the job
+- getTitle(): Returns job title
+- getStatus(): Returns current job status
+- 
+
+Relationships:
+- Belongs to User (employer) via employerId
+- Has many Applications (one-to-many relationship)
+- Linked to Payment model via jobId
+
+
+Class: Application
+Location: src/Models/Application.php
+Purpose: Represents job applications submitted by employees
+
+Important Properties:
+- id (int|null): Unique application identifier
+- jobId (int): ID of the job being applied to
+- employeeId (int): ID of the employee submitting the application
+- coverLetter (string): Optional cover letter from the employee
+- status (string): Application status ('pending', 'accepted', 'rejected')
+- createdAt (string): Application submission timestamp
+- updatedAt (string|null): Last update timestamp
+
+Important Methods:
+- getId(): Returns application ID
+- getJobId(): Returns associated job ID
+- getEmployeeId(): Returns employee ID who applied
+- getStatus(): Returns current application status
+- getCoverLetter(): Returns cover letter text
+- toArray(): Converts application object to associative array
+
+Relationships:
+- Belongs to Job via jobId
+- Belongs to User (employee) via employeeId
+- Linked to Payment model (when application is accepted and payment is created)
+
+
+Class: Payment
+Location: src/Models/Payment.php
+Purpose: Represents payment transactions between employers and employees
+
+Important Properties:
+- id (int|null): Unique payment identifier
+- jobId (int): ID of the associated job
+- employerId (int): ID of the employer making the payment
+- employeeId (int): ID of the employee receiving the payment
+- amount (float): Payment amount
+- status (string): Payment status ('pending', 'completed', 'cancelled')
+- paymentMethod (string): Payment method used (bank_transfer, paypal, etc.)
+- description (string): Payment description/notes
+- createdAt (string): Payment creation timestamp
+- completedAt (string|null): Payment completion timestamp
+
+Important Methods:
+- getId(): Returns payment ID
+- getJobId(): Returns associated job ID
+- getEmployerId(): Returns employer ID
+- getEmployeeId(): Returns employee ID
+- getAmount(): Returns payment amount
+- getStatus(): Returns payment status
+- toArray(): Converts payment object to associative array
+
+Relationships:
+- Belongs to Job via jobId
+- Belongs to User (employer) via employerId
+- Belongs to User (employee) via employeeId
+
+
+Class: Message
+Location: src/Models/Message.php
+Purpose: Represents messages exchanged between users
+
+Important Properties:
+- id (int|null): Unique message identifier
+- senderId (int): ID of the user sending the message
+- receiverId (int): ID of the user receiving the message
+- message (string): Message content
+- isRead (bool): Whether the message has been read
+- createdAt (string): Message creation timestamp
+- readAt (string|null): Timestamp when message was read
+
+Important Methods:
+- getId(): Returns message ID
+- getSenderId(): Returns sender user ID
+- getReceiverId(): Returns receiver user ID
+- getMessage(): Returns message content
+- isRead(): Returns read status
+- toArray(): Converts message object to associative array
+
+Relationships:
+- Belongs to User (sender) via senderId
+- Belongs to User (receiver) via receiverId
+
+
+Class: Friend
+Location: src/Models/Friend.php
+Purpose: Represents friend connections between users
+
+Important Properties:
+- id (int|null): Unique friend relationship identifier
+- userId (int): ID of the user who sent the friend request
+- friendId (int): ID of the user receiving the friend request
+- status (string): Relationship status ('pending', 'accepted', 'blocked')
+- createdAt (string): Friend request creation timestamp
+- acceptedAt (string|null): Timestamp when request was accepted
+
+Important Methods:
+- getId(): Returns friend relationship ID
+- getUserId(): Returns user ID who sent the request
+- getFriendId(): Returns user ID receiving the request
+- getStatus(): Returns relationship status
+- toArray(): Converts friend object to associative array
+
+Relationships:
+- Belongs to User (requester) via userId
+- Belongs to User (receiver) via friendId
+
+
+--------------------------------------------------------------------------------
+SERVICE CLASSES
+--------------------------------------------------------------------------------
+
+Class: JsonDatabase
+Location: src/Services/JsonDatabase.php
+Purpose: Provides database abstraction layer for JSON file storage
+
+Important Properties:
+- filePath (string): Path to the JSON file being managed
+
+Important Methods:
+- __construct(string $filePath): Initializes database with file path and ensures file exists
+- readAll(): array - Reads all records from JSON file
+- writeAll(array $data): bool - Writes entire dataset to JSON file
+- findById(int $id): array|null - Finds record by ID
+- create(array $item): int - Creates new record and returns generated ID
+- update(int $id, array $newData): bool - Updates record by ID
+- delete(int $id): bool - Deletes record by ID
+- findWhere(callable $callback): array - Filters records using callback function
+- getNextId(array $data): int - Generates next available ID
+
+Relationships:
+- Used by all Service classes (AuthService, JobService, ApplicationService, 
+  PaymentService, MessageService, FriendService) as the data persistence layer
+- No direct relationships with Model classes, works with raw array data
+
+
+Class: AuthService
+Location: src/Services/AuthService.php
+Purpose: Handles user authentication and user management operations
+
+Important Properties:
+- db (JsonDatabase): Database instance for user data
+- validator (ValidationService): Validation service instance
+
+Important Methods:
+- register(array $data): User - Registers new user, hashes password, creates user record
+- login(array $data): User - Authenticates user by email/password, returns User object
+- getUserById(int $id): User|null - Retrieves user by ID
+- updateUser(int $id, array $data): bool - Updates user information
+- deleteUser(int $id): bool - Deletes user account
+- getAllUsers(): array - Retrieves all users
+- getUsersByRole(string $role): array - Retrieves users filtered by role
+- emailExists(string $email): bool - Checks if email is already registered
+
+Relationships:
+- Uses JsonDatabase for data persistence
+- Uses ValidationService for input validation
+- Works with User model
+- Called by AuthController
+- Used by DashboardController to retrieve user information
+
+
+Class: JobService
+Location: src/Services/JobService.php
+Purpose: Manages job posting operations and queries
+
+Important Properties:
+- db (JsonDatabase): Database instance for job data
+- validator (ValidationService): Validation service instance
+
+Important Methods:
+- createJob(array $data): Job - Creates new job posting
+- getJobById(int $id): Job|null - Retrieves job by ID
+- getAllJobs(): array - Retrieves all jobs
+- getJobsByEmployer(int $employerId): array - Gets all jobs posted by specific employer
+- getOpenJobs(): array - Retrieves only jobs with 'Open' status
+- updateJob(int $id, array $data): bool - Updates job information
+- deleteJob(int $id): bool - Deletes job posting
+
+Relationships:
+- Uses JsonDatabase for data persistence
+- Uses ValidationService for input validation
+- Works with Job model
+- Called by JobController
+- Used by DashboardController and ApplicationService to query jobs
+
+
+Class: ApplicationService
+Location: src/Services/ApplicationService.php
+Purpose: Manages job application operations
+
+Important Properties:
+- db (JsonDatabase): Database instance for application data
+
+Important Methods:
+- createApplication(array $data): Application - Creates new job application
+- getApplicationById(int $id): Application|null - Retrieves application by ID
+- getApplicationsByJob(int $jobId): array - Gets all applications for a specific job
+- getApplicationsByEmployee(int $employeeId): array - Gets all applications by an employee
+- updateApplicationStatus(int $id, string $status): bool - Updates application status
+- hasApplied(int $jobId, int $employeeId): bool - Checks if employee already applied
+
+Relationships:
+- Uses JsonDatabase for data persistence
+- Works with Application model
+- Called by ApplicationController
+- Used by DashboardController to retrieve and organize applications
+
+
+Class: PaymentService
+Location: src/Services/PaymentService.php
+Purpose: Manages payment transactions
+
+Important Properties:
+- db (JsonDatabase): Database instance for payment data
+
+Important Methods:
+- createPayment(array $data): Payment - Creates new payment record
+- getPaymentById(int $id): Payment|null - Retrieves payment by ID
+- getPaymentsByUser(int $userId): array - Gets all payments for a user (as employer or employee)
+- getPaymentsByJob(int $jobId): array - Gets all payments for a specific job
+- completePayment(int $paymentId): bool - Marks payment as completed
+- cancelPayment(int $paymentId): bool - Cancels a payment
+- getTotalEarnings(int $employeeId): float - Calculates total earnings for employee
+- getTotalSpent(int $employerId): float - Calculates total spent by employer
+
+Relationships:
+- Uses JsonDatabase for data persistence
+- Works with Payment model
+- Called by PaymentController
+- Used by DashboardController to check payment status and filter applications
+
+
+Class: FriendService
+Location: src/Services/FriendService.php
+Purpose: Manages friend connections and friend requests
+
+Important Properties:
+- db (JsonDatabase): Database instance for friend data
+
+Important Methods:
+- sendFriendRequest(int $userId, int $friendId): Friend - Sends friend request
+- acceptFriendRequest(int $requestId): bool - Accepts a pending friend request
+- rejectFriendRequest(int $requestId): bool - Rejects a friend request
+- getFriends(int $userId): array - Gets all accepted friends for a user
+- getPendingRequests(int $userId): array - Gets pending requests received by user
+- getSentRequests(int $userId): array - Gets pending requests sent by user
+- isFriend(int $userId, int $friendId): bool - Checks if two users are friends
+- removeFriend(int $requestId): bool - Removes friend connection
+
+Relationships:
+- Uses JsonDatabase for data persistence
+- Works with Friend model
+- Called by FriendController
+- Used in dashboard and profile pages to check friend status
+
+
+Class: ValidationService
+Location: src/Services/ValidationService.php
+Purpose: Provides input validation for forms and data
+
+Important Methods:
+- validateRegistration(array $data): array - Validates user registration data
+  * Checks email format and uniqueness
+  * Validates password strength (min 8 chars, uppercase, lowercase, number)
+  * Validates name fields
+  * Validates phone number format
+  * Role-specific validation for employees (skills, experience)
+- validateLogin(array $data): array - Validates login credentials
+- validateJob(array $data): array - Validates job posting data
+  * Validates required fields (title, description, skills, budget, etc.)
+  * Checks minimum length requirements
+
+Relationships:
+- Used by AuthService for registration and login validation
+- Used by JobService for job posting validation
+- Throws ValidationException on validation failure
+
+
+--------------------------------------------------------------------------------
+CONTROLLER CLASSES
+--------------------------------------------------------------------------------
+
+Class: AuthController
+Location: src/Controllers/AuthController.php
+Purpose: Handles authentication-related HTTP requests
+
+Important Properties:
+- authService (AuthService): Service for authentication operations
+
+Important Methods:
+- register(): array - Processes user registration
+  * Calls AuthService::register()
+  * Sets session variables on success
+  * Returns success/error response with redirect path
+- login(): array - Processes user login
+  * Calls AuthService::login()
+  * Sets session variables on success
+  * Returns success/error response
+- logout(): void - Handles user logout, destroys session
+
+Relationships:
+- Uses AuthService for business logic
+- Uses SessionMiddleware for session management
+- Handles ValidationException and AuthenticationException
+- Called from login.php and register.php
+
+
+Class: DashboardController
+Location: src/Controllers/DashboardController.php
+Purpose: Handles dashboard data aggregation and presentation
+
+Important Properties:
+- authService (AuthService): Service for user operations
+- jobService (JobService): Service for job operations
+- applicationService (ApplicationService): Service for application operations
+- paymentService (PaymentService): Service for payment operations
+
+Important Methods:
+- index(): array - Main dashboard method that aggregates all data
+  * For employees: Returns jobs, employers, other employees, applications
+  * For employers: Returns jobs, employees, other employers, applications
+  * Excludes current user from user lists
+- enrichUsersWithJobInfo(array $users): array - Adds job count and job details to user arrays
+- getApplicationsForEmployer(int $employerId): array - Organizes applications by status
+  * Filters out applications for which payment has been completed
+  * Sorts applications alphabetically by employee name
+  * Separates into pending, accepted, and rejected groups
+
+Relationships:
+- Uses multiple services (AuthService, JobService, ApplicationService, PaymentService)
+- Returns data to dashboard.php view
+- Called from dashboard.php
+
+
+Class: JobController
+Location: src/Controllers/JobController.php
+Purpose: Handles job posting CRUD operations
+
+Important Methods:
+- create(): array - Creates new job posting
+- update(): array - Updates existing job posting
+- delete(): array - Deletes job posting
+
+Relationships:
+- Uses JobService for business logic
+- Uses ValidationService indirectly through JobService
+- Called from dashboard.php (employer section)
+
+
+Class: ApplicationController
+Location: src/Controllers/ApplicationController.php
+Purpose: Handles job application operations
+
+Important Methods:
+- create(): array - Creates new job application
+- updateStatus(): array - Updates application status (accept/reject)
+
+Relationships:
+- Uses ApplicationService for business logic
+- Uses JobService to retrieve job information
+- Called from dashboard.php
+
+
+Class: FriendController
+Location: src/Controllers/FriendController.php
+Purpose: Handles friend request and friend management operations
+
+Important Methods:
+- sendRequest(): array - Sends friend request to another user
+- acceptRequest(): array - Accepts pending friend request
+- rejectRequest(): array - Rejects friend request
+- removeFriend(): array - Removes friend connection
+- index(): array - Returns friends, pending requests, and sent requests for user
+
+Relationships:
+- Uses FriendService for business logic
+- Uses AuthService to retrieve user information
+- Uses SessionMiddleware for current user identification
+- Called from friends.php
+
+
+Class: PaymentController
+Location: src/Controllers/PaymentController.php
+Purpose: Handles payment operations
+
+Important Methods:
+- create(): array - Creates new payment record
+- complete(): array - Marks payment as completed
+- index(): array - Retrieves payments for current user
+
+Relationships:
+- Uses PaymentService for business logic
+- Called from payments.php
+
+
+Class: ProfileController
+Location: src/Controllers/ProfileController.php
+Purpose: Handles user profile operations
+
+Important Methods:
+- show(int $userId): array - Retrieves profile data for a user
+- update(): array - Updates user profile information
+
+Relationships:
+- Uses AuthService for user operations
+- Uses JobService to retrieve jobs for employer profiles
+- Called from profile.php
+
+
+Class: MessageController
+Location: src/Controllers/MessageController.php
+Purpose: Handles messaging operations
+
+Important Methods:
+- send(): array - Sends message between users
+- getConversation(): array - Retrieves conversation between two users
+- index(): array - Retrieves all conversations for current user
+
+Relationships:
+- Uses MessageService for business logic
+- Called from messages.php
+
+
+--------------------------------------------------------------------------------
+MIDDLEWARE CLASSES
+--------------------------------------------------------------------------------
+
+Class: SessionMiddleware
+Location: src/Middleware/SessionMiddleware.php
+Purpose: Provides session management utilities
+
+Important Methods (Static):
+- start(): void - Starts PHP session if not already started
+- set(string $key, $value): void - Sets session variable
+- get(string $key, $default = null): mixed - Gets session variable
+- has(string $key): bool - Checks if session variable exists
+- remove(string $key): void - Removes session variable
+- destroy(): void - Destroys session
+- isLoggedIn(): bool - Checks if user is logged in
+- getUserId(): int|null - Gets current user ID from session
+- getUserRole(): string|null - Gets current user role from session
+- setFlash(string $type, string $message): void - Sets flash message
+- getFlash(string $type): string|null - Gets and clears flash message
+
+Relationships:
+- Used by all controllers and middleware
+- Used throughout the application for session management
+- Called before AuthMiddleware in request flow
+
+
+Class: AuthMiddleware
+Location: src/Middleware/AuthMiddleware.php
+Purpose: Protects routes requiring authentication
+
+Important Methods (Static):
+- requireAuth(): void - Redirects to login if user not authenticated
+- requireRole(string $role): void - Redirects if user doesn't have required role
+- redirectIfAuthenticated(): void - Redirects authenticated users away from login/register
+
+Relationships:
+- Uses SessionMiddleware to check authentication status
+- Used in all protected pages (dashboard.php, profile.php, etc.)
+- Ensures only authenticated users access protected resources
+
+
+--------------------------------------------------------------------------------
+EXCEPTION CLASSES
+--------------------------------------------------------------------------------
+
+Class: AuthenticationException
+Location: src/Exceptions/AuthenticationException.php
+Purpose: Custom exception for authentication failures
+
+Relationships:
+- Thrown by AuthService::login() when credentials are invalid
+- Caught by AuthController::login()
+
+
+Class: ValidationException
+Location: src/Exceptions/ValidationException.php
+Purpose: Custom exception for validation errors
+
+Important Methods:
+- getErrors(): array - Returns array of validation error messages
+
+Relationships:
+- Thrown by ValidationService methods
+- Caught by controllers to display validation errors to users
+
+
+================================================================================
+END OF DOCUMENTATION
+================================================================================
+
